@@ -33,9 +33,18 @@ export const VoiceTranslationBot = () => {
   const { speak, cancel, speaking } = useSpeechSynthesis();
   const { listen, stop, isListening } = useSpeechRecognition({
     onResult: (result) => {
-      handleSpeechResult(result);
+      if (result) {
+        handleSpeechResult(result);
+        // Auto-stop recording after getting result
+        setIsRecording(false);
+        stop();
+      }
+    },
+    onEnd: () => {
+      setIsRecording(false);
     },
     onError: (event) => {
+      setIsRecording(false);
       toast({
         title: "Speech Recognition Error",
         description: "Please check your microphone permissions.",
@@ -75,9 +84,15 @@ export const VoiceTranslationBot = () => {
 
   const startNewSession = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('conversation_sessions')
         .insert({
+          user_id: user.id,
           title: `Session ${new Date().toLocaleDateString()}`,
           source_language: sourceLanguage,
           target_language: targetLanguage,
@@ -174,12 +189,23 @@ export const VoiceTranslationBot = () => {
   };
 
   const toggleRecording = () => {
-    if (isListening) {
+    if (isRecording || isListening) {
       stop();
       setIsRecording(false);
     } else {
-      listen({ continuous: false, interimResults: false });
+      listen({ 
+        continuous: true, 
+        interimResults: false,
+        lang: sourceLanguage === 'zh' ? 'zh-CN' : sourceLanguage
+      });
       setIsRecording(true);
+    }
+  };
+
+  const stopRecording = () => {
+    if (isRecording || isListening) {
+      stop();
+      setIsRecording(false);
     }
   };
 
@@ -300,27 +326,33 @@ export const VoiceTranslationBot = () => {
 
                   <Separator />
 
-                  {/* Voice Controls */}
+                   {/* Voice Controls */}
                   <div className="space-y-4">
-                    <div className="flex justify-center">
-                      <Button
-                        variant="voice"
-                        size="voice-lg"
-                        onClick={toggleRecording}
-                        className={isRecording ? 'animate-pulse' : ''}
-                        disabled={isTranslating}
-                      >
-                        {isRecording ? (
-                          <MicOff className="h-8 w-8" />
-                        ) : (
+                    <div className="flex justify-center space-x-3">
+                      {!isRecording ? (
+                        <Button
+                          variant="voice"
+                          size="voice-lg"
+                          onClick={toggleRecording}
+                          disabled={isTranslating}
+                        >
                           <Mic className="h-8 w-8" />
-                        )}
-                      </Button>
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="destructive"
+                          size="voice-lg"
+                          onClick={stopRecording}
+                          className="animate-pulse"
+                        >
+                          <MicOff className="h-8 w-8" />
+                        </Button>
+                      )}
                     </div>
                     
                     <div className="text-center">
                       <p className="text-sm text-muted-foreground">
-                        {isRecording ? 'Listening...' : isTranslating ? 'Translating...' : 'Press to Start'}
+                        {isRecording ? 'Recording... Click to stop' : isTranslating ? 'Translating...' : 'Click to start recording'}
                       </p>
                     </div>
 
