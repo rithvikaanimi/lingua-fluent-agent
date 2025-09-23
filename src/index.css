@@ -8,35 +8,61 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Professional Voice Bot Theme */
+    --background: 240 6% 10%;
+    --foreground: 240 5% 96%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 240 7% 13%;
+    --card-foreground: 240 5% 96%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 240 7% 13%;
+    --popover-foreground: 240 5% 96%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Professional Blue-Purple Gradient System */
+    --primary: 240 100% 60%;
+    --primary-foreground: 240 5% 96%;
+    --primary-glow: 250 100% 70%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 240 5% 18%;
+    --secondary-foreground: 240 5% 96%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 240 5% 18%;
+    --muted-foreground: 240 5% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 250 80% 55%;
+    --accent-foreground: 240 5% 96%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 240 5% 96%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 240 5% 20%;
+    --input: 240 5% 18%;
+    --ring: 240 100% 60%;
 
-    --radius: 0.5rem;
+    --radius: 12px;
+
+    /* Professional Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(240 100% 60%), hsl(250 100% 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(240 5% 18%), hsl(240 7% 13%));
+    --gradient-glass: linear-gradient(135deg, hsla(240, 100%, 60%, 0.1), hsla(250, 100%, 70%, 0.05));
+    --gradient-speaker-a: linear-gradient(135deg, hsl(210 100% 60%), hsl(220 100% 65%));
+    --gradient-speaker-b: linear-gradient(135deg, hsl(270 100% 60%), hsl(280 100% 65%));
+
+    /* Professional Shadows */
+    --shadow-elegant: 0 20px 60px -12px hsla(240, 100%, 60%, 0.3);
+    --shadow-glass: 0 8px 32px hsla(240, 100%, 60%, 0.15);
+    --shadow-conversation: 0 4px 20px hsla(240, 100%, 60%, 0.12);
+
+    /* Animation Variables */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    /* Voice Visualization */
+    --voice-wave-primary: hsl(240 100% 60%);
+    --voice-wave-secondary: hsl(250 100% 70%);
+    --accuracy-high: hsl(120 60% 50%);
+    --accuracy-medium: hsl(45 100% 55%);
+    --accuracy-low: hsl(0 75% 60%);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +82,35 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Enhanced Dark Mode for Professional Voice Bot */
+    --background: 240 8% 8%;
+    --foreground: 240 5% 98%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 240 8% 11%;
+    --card-foreground: 240 5% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 240 8% 11%;
+    --popover-foreground: 240 5% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 240 100% 65%;
+    --primary-foreground: 240 8% 8%;
+    --primary-glow: 250 100% 75%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 240 5% 15%;
+    --secondary-foreground: 240 5% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 240 5% 15%;
+    --muted-foreground: 240 5% 70%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 250 85% 60%;
+    --accent-foreground: 240 8% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 65%;
+    --destructive-foreground: 240 8% 8%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 240 5% 18%;
+    --input: 240 5% 15%;
+    --ring: 240 100% 65%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +128,81 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    background: hsl(var(--background));
+  }
+
+  /* Professional Glass Morphism Effects */
+  .glass-card {
+    @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20;
+    box-shadow: var(--shadow-glass);
+  }
+
+  .voice-wave {
+    @apply bg-gradient-to-r from-primary to-accent;
+    animation: pulse-wave 1.5s ease-in-out infinite;
+  }
+
+  .conversation-bubble-a {
+    @apply bg-gradient-to-br;
+    background: var(--gradient-speaker-a);
+    box-shadow: var(--shadow-conversation);
+  }
+
+  .conversation-bubble-b {
+    @apply bg-gradient-to-br;
+    background: var(--gradient-speaker-b);
+    box-shadow: var(--shadow-conversation);
+  }
+
+  .accuracy-indicator {
+    transition: var(--transition-smooth);
+  }
+
+  .accuracy-high { color: var(--accuracy-high); }
+  .accuracy-medium { color: var(--accuracy-medium); }
+  .accuracy-low { color: var(--accuracy-low); }
+}
+
+@layer components {
+  .btn-voice {
+    @apply relative overflow-hidden rounded-full p-6 transition-all duration-300;
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-elegant);
+  }
+
+  .btn-voice:hover {
+    @apply scale-105;
+    box-shadow: 0 25px 80px -15px hsla(240, 100%, 60%, 0.4);
+  }
+
+  .btn-voice:active {
+    @apply scale-95;
+  }
+
+  .btn-voice::before {
+    @apply absolute inset-0 rounded-full opacity-0 transition-opacity duration-300;
+    content: '';
+    background: radial-gradient(circle, hsla(240, 100%, 80%, 0.3) 0%, transparent 70%);
+  }
+
+  .btn-voice:hover::before {
+    @apply opacity-100;
+  }
+}
+
+@keyframes pulse-wave {
+  0%, 100% { transform: scaleY(1); opacity: 0.8; }
+  50% { transform: scaleY(1.5); opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

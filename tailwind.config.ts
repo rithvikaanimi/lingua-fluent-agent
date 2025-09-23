@@ -52,10 +52,17 @@ export default {
           foreground: "hsl(var(--sidebar-foreground))",
           primary: "hsl(var(--sidebar-primary))",
           "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
+          "accent": "hsl(var(--sidebar-accent))",
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
+        gradient: {
+          primary: "var(--gradient-primary)",
+          secondary: "var(--gradient-secondary)",
+          glass: "var(--gradient-glass)",
+          "speaker-a": "var(--gradient-speaker-a)",
+          "speaker-b": "var(--gradient-speaker-b)",
         },
       },
       borderRadius: {
@@ -84,6 +91,9 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-wave": "pulse-wave 1.5s ease-in-out infinite",
+        "fade-in-up": "fade-in-up 0.3s ease-out",
+        "voice-pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
