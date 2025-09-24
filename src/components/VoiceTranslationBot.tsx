@@ -8,14 +8,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 import { useSpeechSynthesis, useSpeechRecognition } from 'react-speech-kit';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ConversationView } from './ConversationView';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { SettingsPanel } from './SettingsPanel';
+import { AuthWrapper } from './AuthWrapper';
 
-export const VoiceTranslationBot = () => {
+const VoiceTranslationBotInner = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [currentSpeaker, setCurrentSpeaker] = useState<'A' | 'B'>('A');
   const [sourceLanguage, setSourceLanguage] = useState('en');
@@ -26,6 +28,7 @@ export const VoiceTranslationBot = () => {
   const [activeView, setActiveView] = useState<'conversation' | 'analytics' | 'settings'>('conversation');
   const [messages, setMessages] = useState<any[]>([]);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [testInput, setTestInput] = useState('');
   
   const { toast } = useToast();
   const sessionStartTime = useRef<number | null>(null);
@@ -356,19 +359,46 @@ export const VoiceTranslationBot = () => {
                       </p>
                     </div>
 
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={switchSpeaker}
-                      className="w-full"
-                    >
-                      Switch to Speaker {currentSpeaker === 'A' ? 'B' : 'A'}
-                    </Button>
-                  </div>
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={switchSpeaker}
+                       className="w-full"
+                     >
+                       Switch to Speaker {currentSpeaker === 'A' ? 'B' : 'A'}
+                     </Button>
+                   </div>
 
-                  <Separator />
+                   <Separator />
 
-                  {/* Session Stats */}
+                   {/* Test Input */}
+                   <div className="space-y-2">
+                     <Label className="text-sm font-medium">Test Translation</Label>
+                     <Input
+                       value={testInput}
+                       onChange={(e) => setTestInput(e.target.value)}
+                       placeholder="Type text to translate..."
+                       className="text-sm"
+                     />
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={() => {
+                         if (testInput.trim()) {
+                           handleSpeechResult(testInput.trim());
+                           setTestInput('');
+                         }
+                       }}
+                       disabled={isTranslating || !testInput.trim()}
+                       className="w-full"
+                     >
+                       Translate Text
+                     </Button>
+                   </div>
+
+                   <Separator />
+
+                   {/* Session Stats */}
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span>Current Speaker:</span>
@@ -419,5 +449,13 @@ export const VoiceTranslationBot = () => {
         )}
       </div>
     </div>
+  );
+};
+
+export const VoiceTranslationBot = () => {
+  return (
+    <AuthWrapper>
+      <VoiceTranslationBotInner />
+    </AuthWrapper>
   );
 };
