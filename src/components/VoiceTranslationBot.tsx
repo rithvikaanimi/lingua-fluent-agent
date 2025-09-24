@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Settings, History, BarChart3, Download, Play, Pause, Volume2 } from 'lucide-react';
+import { Mic, MicOff, Settings, History, BarChart3, Download, Play, Pause, Volume2, Send, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 import { useSpeechSynthesis, useSpeechRecognition } from 'react-speech-kit';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -26,6 +27,7 @@ export const VoiceTranslationBot = () => {
   const [activeView, setActiveView] = useState<'conversation' | 'analytics' | 'settings'>('conversation');
   const [messages, setMessages] = useState<any[]>([]);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [textInput, setTextInput] = useState('');
   
   const { toast } = useToast();
   const sessionStartTime = useRef<number | null>(null);
@@ -127,20 +129,32 @@ export const VoiceTranslationBot = () => {
   const handleSpeechResult = async (speechText: string) => {
     if (!speechText.trim() || !sessionId) return;
 
+    console.log('Processing speech result:', speechText);
     setIsTranslating(true);
     
     try {
       // Call AI agent for translation
+      console.log('Calling AI function with:', { 
+        message: `Translate "${speechText}" from ${sourceLanguage} to ${targetLanguage}. Provide only the translation, no additional text.`
+      });
+
       const { data: functionData, error: functionError } = await supabase.functions.invoke('ai', {
         body: { 
           message: `Translate "${speechText}" from ${sourceLanguage} to ${targetLanguage}. Provide only the translation, no additional text.`
         }
       });
 
-      if (functionError) throw functionError;
+      console.log('AI function response:', functionData, functionError);
+
+      if (functionError) {
+        console.error('Function error:', functionError);
+        throw functionError;
+      }
 
       const translatedText = functionData?.response || '';
       const confidence = Math.floor(85 + Math.random() * 15); // Simulated confidence
+
+      console.log('Translation result:', translatedText);
 
       // Save message to database
       const { error: insertError } = await supabase
@@ -155,7 +169,10 @@ export const VoiceTranslationBot = () => {
           confidence_score: confidence,
         });
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error('Insert error:', insertError);
+        throw insertError;
+      }
 
       // Update local messages
       const newMessage = {
@@ -179,16 +196,28 @@ export const VoiceTranslationBot = () => {
       // Update accuracy
       setAccuracy(prev => Math.floor((prev + confidence) / 2));
 
+      toast({
+        title: "Translation Complete",
+        description: `Translated: "${translatedText}"`,
+      });
+
     } catch (error) {
       console.error('Translation error:', error);
       toast({
         title: "Translation Error",
-        description: "Failed to translate speech.",
+        description: error.message || "Failed to translate speech.",
         variant: "destructive",
       });
     } finally {
       setIsTranslating(false);
     }
+  };
+
+  const handleTextTranslation = async () => {
+    if (!textInput.trim()) return;
+    
+    await handleSpeechResult(textInput.trim());
+    setTextInput('');
   };
 
   const toggleRecording = () => {
@@ -387,7 +416,33 @@ export const VoiceTranslationBot = () => {
                     </Button>
                   </div>
 
-                  <Separator />
+                   <Separator />
+
+                   {/* Manual Text Input for Testing */}
+                   <div className="space-y-3">
+                     <Label className="text-sm font-medium">Test Translation</Label>
+                     <div className="flex space-x-2">
+                       <Input
+                         placeholder="Type text to translate..."
+                         value={textInput}
+                         onChange={(e) => setTextInput(e.target.value)}
+                         onKeyPress={(e) => e.key === 'Enter' && handleTextTranslation()}
+                       />
+                       <Button
+                         variant="outline"
+                         size="sm"
+                         onClick={handleTextTranslation}
+                         disabled={isTranslating || !textInput.trim()}
+                       >
+                         <Send className="h-4 w-4" />
+                       </Button>
+                     </div>
+                     <p className="text-xs text-muted-foreground">
+                       For testing when voice recognition isn't available
+                     </p>
+                   </div>
+
+                   <Separator />
 
                   {/* Session Stats */}
                   <div className="space-y-3">
