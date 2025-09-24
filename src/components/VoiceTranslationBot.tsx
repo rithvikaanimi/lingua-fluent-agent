@@ -33,6 +33,7 @@ export const VoiceTranslationBot = () => {
   const { speak, cancel, speaking } = useSpeechSynthesis();
   const { listen, stop, isListening } = useSpeechRecognition({
     onResult: (result) => {
+      console.log('Speech recognition result:', result);
       if (result) {
         handleSpeechResult(result);
         // Auto-stop recording after getting result
@@ -41,13 +42,15 @@ export const VoiceTranslationBot = () => {
       }
     },
     onEnd: () => {
+      console.log('Speech recognition ended');
       setIsRecording(false);
     },
     onError: (event) => {
+      console.error('Speech recognition error:', event);
       setIsRecording(false);
       toast({
         title: "Speech Recognition Error",
-        description: "Please check your microphone permissions.",
+        description: "Please check your microphone permissions and try again.",
         variant: "destructive",
       });
     },
@@ -190,15 +193,33 @@ export const VoiceTranslationBot = () => {
 
   const toggleRecording = () => {
     if (isRecording || isListening) {
+      console.log('Stopping recording');
       stop();
       setIsRecording(false);
     } else {
+      console.log('Starting recording with language:', sourceLanguage);
+      
+      // Check if speech recognition is supported
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        toast({
+          title: "Speech Recognition Not Supported",
+          description: "Your browser doesn't support speech recognition. Try Chrome or Edge.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       listen({ 
         continuous: true, 
         interimResults: false,
         lang: sourceLanguage === 'zh' ? 'zh-CN' : sourceLanguage
       });
       setIsRecording(true);
+      
+      toast({
+        title: "Recording Started",
+        description: "Speak now to translate your voice.",
+      });
     }
   };
 
